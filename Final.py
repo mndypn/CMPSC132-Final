@@ -1,25 +1,61 @@
 import random
 
-def number_guessing_game():
-    number = random.randint(1, 100)
-    attempts = 0
-    game_over = False
+class NumberGuessingGame:
+    def __init__(self, low=1, high=100):
+        self.low = low
+        self.high = high
+        self.target = random.randint(low, high)
+        self.attempts = 0
 
-    while not game_over:
-        user_input = input("Guess a number: ")
-        if user_input.isdigit():
-            guess = int(user_input)
-            attempts += 1
-            if guess == number:
-                print(f"Correct! You guessed it in {attempts} attempts!")
-                game_over = True
-            elif guess < number:
-                print("Too low, guess a higher number")
-            else:
-                print("Too high, guess a lower number")
-        
+    def get_guess(self):
+        user_input = input(f"Guess a number ({self.low}-{self.high}): ").strip()
+
+        if not user_input.isdigit():
+            print("Invalid input. Please enter an integer.")
+            return None
+
+        guess = int(user_input)
+
+        if guess < self.low or guess > self.high:
+            print(f"Out of range. Enter a number between {self.low} and {self.high}.")
+            return None
+        return guess
+
+    def evaluate_guess(self, guess):
+        self.attempts += 1
+        if guess == self.target:
+            print(f"Correct! You guessed it in {self.attempts} attempts!")
+            return True
+        elif guess < self.target:
+            print("Too low, guess a higher number")
         else:
-            print ("Invalid input. Please enter an integer")
+            print("Too high, guess a lower number")
+        return False
 
 
-number_guessing_game()
+def ask_replay():
+    valid = False
+    answer = ""
+    while not valid:
+        answer = input("Play again? (y/n): ").strip().lower()
+        if answer == "y" or answer == "n":
+            valid = True
+        else:
+            print("Please enter 'y' or 'n'.")
+    return answer == "y"
+
+def main():
+    playing = True
+    while playing:
+        game = NumberGuessingGame()
+        game_over = False
+        print("New game started.")
+        while not game_over:
+            guess = game.get_guess()
+            if guess is not None:
+                game_over = game.evaluate_guess(guess)
+        playing = ask_replay()
+    print("Thanks for playing.")
+
+
+main()
