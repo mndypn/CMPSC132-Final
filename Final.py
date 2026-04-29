@@ -46,6 +46,7 @@ def ask_replay():
 
 def main():
     playing = True
+    attempts_history = []
     while playing:
         game = NumberGuessingGame()
         game_over = False
@@ -54,6 +55,10 @@ def main():
             guess = game.get_guess()
             if guess is not None:
                 game_over = game.evaluate_guess(guess)
+        attempts_history.append(game.attempts)
+        best_attempts = min(attempts_history)
+        print(f"Attempts this round: {game.attempts}\nBest attempt: {best_attempts}")
+
         playing = ask_replay()
     print("Thanks for playing.")
 
